@@ -18,6 +18,7 @@
 import copy
 import inspect
 import math
+from functools import reduce
 
 import cairo
 
@@ -152,7 +153,7 @@ class Chart(object):
     def _update(self, options={}):
         """Update all the information needed to render the chart"""
         self.setOptions(options)
-        self._setColorscheme()
+        # self._setColorscheme()
         self._updateXY()
         self._updateChart()
         self._updateTicks()
@@ -589,7 +590,7 @@ class Chart(object):
 
         def drawKey(key, x, y, text_height):
             cx.rectangle(x, y, bullet, bullet)
-            cx.set_source_rgb(*self.colorScheme[key])
+            cx.set_source_rgb(0.2, 0.23, 0.9)
             cx.fill_preserve()
             cx.set_source_rgb(0, 0, 0)
             cx.stroke()
@@ -765,8 +766,8 @@ class Layout(object):
                 max_width, max_height = max(widths), max(heights)
                 if axis.rotate:
                     radians = math.radians(axis.rotate)
-                    sin = abs(math.sin(radians))
-                    cos = abs(math.cos(radians))
+                    sin = math.sin(radians)
+                    cos = math.cos(radians)
                     max_width, max_height = (
                         max_width * cos + max_height * sin,
                         max_width * sin + max_height * cos,

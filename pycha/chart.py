@@ -153,7 +153,7 @@ class Chart(object):
     def _update(self, options={}):
         """Update all the information needed to render the chart"""
         self.setOptions(options)
-        # self._setColorscheme()
+        self._setColorscheme()
         self._updateXY()
         self._updateChart()
         self._updateTicks()
@@ -173,8 +173,8 @@ class Chart(object):
             xdata = [pair[0] for pair in reduce(lambda a, b: a+b, stores)]
             self.minxval = float(min(xdata))
             self.maxxval = float(max(xdata))
-            if self.minxval * self.maxxval > 0 and self.minxval > 0:
-                self.minxval = 0.0
+            # if self.minxval * self.maxxval > 0 and self.minxval > 0:
+            #    self.minxval = 0.0
 
         self.xrange = self.maxxval - self.minxval
         if self.xrange == 0:
@@ -590,7 +590,7 @@ class Chart(object):
 
         def drawKey(key, x, y, text_height):
             cx.rectangle(x, y, bullet, bullet)
-            cx.set_source_rgb(0.2, 0.23, 0.9)
+            cx.set_source_rgb(*self.colorScheme.colors[key])
             cx.fill_preserve()
             cx.set_source_rgb(0, 0, 0)
             cx.stroke()
@@ -766,8 +766,8 @@ class Layout(object):
                 max_width, max_height = max(widths), max(heights)
                 if axis.rotate:
                     radians = math.radians(axis.rotate)
-                    sin = math.sin(radians)
-                    cos = math.cos(radians)
+                    sin = abs(math.sin(radians))
+                    cos = abs(math.cos(radians))
                     max_width, max_height = (
                         max_width * cos + max_height * sin,
                         max_width * sin + max_height * cos,

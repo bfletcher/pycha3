@@ -123,11 +123,10 @@ class ColorSchemeMetaclass(type):
         return klass
 
 
-class ColorScheme(dict):
+class ColorScheme(metaclass=ColorSchemeMetaclass):
     """A color scheme is a dictionary where the keys match the keys
     constructor argument and the values are colors"""
 
-    __metaclass__ = ColorSchemeMetaclass
     __registry__ = {}
 
     def __init__(self, keys):
@@ -141,6 +140,8 @@ class ColorScheme(dict):
 
     @classmethod
     def getColorScheme(cls, name, default=None):
+        print("DEBUG:")
+        print(cls.__registry__)
         return cls.__registry__.get(name, default)
 
 
@@ -153,15 +154,15 @@ class GradientColorScheme(ColorScheme):
     """
 
     def __init__(self, keys, initialColor=DEFAULT_COLOR):
-        super(GradientColorScheme, self).__init__(keys)
+        super().__init__(keys)
         if initialColor in basicColors:
             initialColor = basicColors[initialColor]
 
         r, g, b = hex2rgb(initialColor)
         light = 1.0 / (len(keys) * 2)
-
+        self.colors = {}
         for i, key in enumerate(keys):
-            self[key] = lighten(r, g, b, light * i)
+            self.colors[key] = lighten(r, g, b, light * i)
 
 
 class FixedColorScheme(ColorScheme):
@@ -177,8 +178,9 @@ class FixedColorScheme(ColorScheme):
             raise ValueError("You must provide as many colors as datasets "
                              "for the fixed color scheme")
 
+        self.colors = {}
         for i, key in enumerate(keys):
-            self[key] = hex2rgb(colors[i])
+            self.colors[key] = hex2rgb(colors[i])
 
 
 class RainbowColorScheme(ColorScheme):
@@ -197,8 +199,9 @@ class RainbowColorScheme(ColorScheme):
         h, s, v = rgb2hsv(r, g, b)
 
         angleDelta = 360.0 / (len(keys) + 1)
+        self.colors = {}
         for key in keys:
-            self[key] = hsv2rgb(h, s, v)
+            self.colors[key] = hsv2rgb(h, s, v)
             h += angleDelta
             if h >= 360.0:
                 h -= 360.0

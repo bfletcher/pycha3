@@ -1,8 +1,8 @@
-.. contents::
-
-=====
-PyCha
-=====
+======
+PyCha3
+======
+This is a very initial port of Pycha to Python3. At the moment line charts are
+definitely working with GTK3.
 
 Pycha is a very simple Python package for drawing charts using the great
 `Cairo <http://www.cairographics.org/>`_ library. Its goals are:
